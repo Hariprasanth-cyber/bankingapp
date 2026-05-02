@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: banking-app-service
+spec:
+  selector:
+    app: banking-app
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

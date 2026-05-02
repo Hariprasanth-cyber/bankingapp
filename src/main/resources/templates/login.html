@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking App - Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: white; border-radius: 12px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h1 { color: #1a1a2e; font-size: 28px; }
+        .logo p { color: #666; font-size: 14px; margin-top: 5px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 14px; }
+        input { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: border-color 0.3s; }
+        input:focus { outline: none; border-color: #4361ee; }
+        .btn { width: 100%; padding: 13px; background: #4361ee; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        .btn:hover { background: #3451d1; }
+        .btn:disabled { background: #a5b4fc; cursor: not-allowed; }
+        .link { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+        .link a { color: #4361ee; text-decoration: none; font-weight: 600; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        .alert-error { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+        .alert-success { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <h1>🏦 BankingApp</h1>
+        <p>Secure Online Banking</p>
+    </div>
+
+    <div id="errorMsg" class="alert alert-error" style="display:none;"></div>
+    <div id="successMsg" class="alert alert-success" style="display:none;"></div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Sign In</button>
+    </form>
+
+    <div class="link">
+        Don't have an account? <a href="/register">Register here</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const submitBtn = document.getElementById('submitBtn');
+
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userEmail', data.email);
+                localStorage.setItem('userName', data.name);
+
+                successMsg.textContent = '✅ Login successful! Redirecting...';
+                successMsg.style.display = 'block';
+
+                window.location.href = '/dashboard';
+            } else {
+                errorMsg.textContent = data.message || 'Invalid email or password';
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In';
+            }
+        } catch (err) {
+            errorMsg.textContent = 'Connection error. Please try again.';
+            errorMsg.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+        }
+    });
+</script>
+</body>
+</html>
