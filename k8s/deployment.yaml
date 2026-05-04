@@ -78,15 +78,14 @@ spec:
           image: mysql:8.0
           ports:
             - containerPort: 3306
-          env:           
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: banking-secret
+                  key: db-password
             - name: MYSQL_DATABASE
               value: bankingdb
-            - name: MYSQL_USER
-              value: bankadmin
-            - name: MYSQL_PASSWORD
-              value: Welcome$5678!@
-            - name: MYSQL_ROOT_PASSWORD
-              value: root
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
