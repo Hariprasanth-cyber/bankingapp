@@ -95,15 +95,18 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+
       - name: Apply K8s manifests
         run: kubectl apply -f k8s/ -n project2
 
+      - name: Scale to 1 replica
+        run: kubectl scale deployment/banking-app --replicas=1 -n project2
+
       - name: Update image in deployment
         run: |
-              kubectl scale deployment/banking-app --replicas=1 -n project2
-              kubectl set image deployment/banking-app \
-              banking-app=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-              -n project2
+          kubectl set image deployment/banking-app \
+            banking-app=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            -n project2
 
       - name: Verify rollout
         run: kubectl rollout status deployment/banking-app -n project2 --timeout=180s
