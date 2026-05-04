@@ -105,4 +105,4 @@ jobs:
             -n project2              
 
       - name: Verify rollout
-        run: kubectl rollout status deployment/banking-app -n project2 --timeout=120s
+        run: kubectl rollout status deployment/banking-app -n project2 --timeout=130s
