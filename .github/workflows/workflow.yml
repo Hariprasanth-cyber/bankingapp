@@ -2,9 +2,9 @@ name: Banking App CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 env:
   IMAGE_NAME: banking-app
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: "21"
           distribution: temurin
           cache: maven
 
@@ -41,7 +41,7 @@ jobs:
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: "21"
           distribution: temurin
           cache: maven
 
@@ -92,10 +92,11 @@ jobs:
         uses: azure/setup-kubectl@v3
 
       - name: Configure kubeconfig
-        run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
-
-      - name: Apply K8s manifests         
-        run: kubectl apply -f k8s/ -n project2  
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+      - name: Apply K8s manifests
+        run: kubectl apply -f k8s/ -n project2
 
       - name: Update image in deployment
         run: |
