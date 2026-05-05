@@ -46,14 +46,14 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /auth/login
+              path: /actuator/health/readiness
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
 
           livenessProbe:
             httpGet:
-              path: /auth/login
+              path: /actuator/health/liveness
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 15
