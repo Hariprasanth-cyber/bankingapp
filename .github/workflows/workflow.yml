@@ -106,7 +106,7 @@ jobs:
         run: |
           kubectl set image deployment/banking-app \
             banking-app=${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-            -n $NAMESPACE
+            -n project2
 
       - name: Verify rollout
-        run: kubectl rollout status deployment/banking-app -n $NAMESPACE
+        run: kubectl rollout status deployment/banking-app -n project2
