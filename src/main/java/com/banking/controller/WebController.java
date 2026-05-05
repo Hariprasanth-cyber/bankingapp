@@ -33,7 +33,11 @@ public class WebController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            model.addAttribute("accounts", accountService.getAccountsByUser(userDetails.getUsername()));
+            model.addAttribute("userEmail", userDetails.getUsername());
+        }
         return "dashboard";
     }
 
