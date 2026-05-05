@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -47,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
     private String generateUniqueAccountNumber() {
         String number;
         do {
-            number = "ACC" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase();
+            number = "ACC" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase(Locale.ROOT);
         } while (accountRepository.existsByAccountNumber(number));
         return number;
     }

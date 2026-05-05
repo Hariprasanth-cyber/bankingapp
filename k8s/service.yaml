@@ -8,8 +8,7 @@ spec:
     app: banking-app
   type: LoadBalancer
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 8080
 ---
 apiVersion: v1
@@ -22,6 +21,5 @@ spec:
     app: mysql
   type: ClusterIP
   ports:
-    - protocol: TCP
-      port: 3306
+    - port: 3306
       targetPort: 3306
